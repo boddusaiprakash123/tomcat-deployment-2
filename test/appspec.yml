@@ -1,0 +1,34 @@
+	version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /opt/tomcat/tomcat9
+    permissions:
+      - object: /opt/tomcat/tomcat9/bin/catalina.sh
+        pattern: catalina.sh
+        mode: "0755"  # Set the desired permission mode here (e.g., 0755 for execute permission)
+hooks:
+  BeforeInstall:
+    - location: /tmp
+      timeout: 300
+      runas: root
+      command: |
+        # Download Tomcat 9
+        wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.87/bin/apache-tomcat-9.0.87.tar.gz -P /opt/tomcat/
+        
+        # Unzip and rename
+        tar -zxvf /tmp/tomcat9.tar.gz -C /opt/tomcat/
+        mv /opt/tomcat/apache-tomcat-9.x.x /opt/tomcat/tomcat9
+        
+  AfterInstall:
+    - location: /opt/tomcat/tomcat9/bin/catalina.sh
+      timeout: 300
+      runas: root
+      command: |
+        # Start Tomcat
+        /opt/tomcat/tomcat9/bin/catalina.sh start
+
+# Deployment section to copy WAR file from GitHub
+deploy:
+  - source: /myapp.war
+    destination: /opt/tomcat/tomcat9/webapps
