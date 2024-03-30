@@ -5,6 +5,6 @@ files:
     destination: /opt/tomcat9/webapps/myapp
 hooks:
   AfterInstall:
-    - location: scripts/startup.sh
+    - location: /opt/tomcat9/bin/startup.sh
       timeout: 300
       runas: root
