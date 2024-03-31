@@ -5,10 +5,6 @@ files:
     destination: /opt/tomcat/webapps/myapp
 hooks:
   AfterInstall:
-    - location: /opt/tomcat/bin/shutdown.sh
+    - location: /opt/tomcat/bin/startup.sh
       timeout: 300
       runas: root
-   ApplicationStart:
-      - location: /opt/tomcat/bin/startup.sh
-        timeout: 30        
-        runas: root 
