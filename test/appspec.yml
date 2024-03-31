@@ -1,28 +1,17 @@
 version: 0.0
+
 os: linux
+
 files:
-  - source: /
-    destination: /opt/tomcat/webapps/myapp
+  - source: /myapp.war
+    destination: 
+/opt/tomcat/webapps
 hooks:
-  AfterInstall:
-    - location: /etc/systemd/system/tomcat.service
-      timeout: 300
+  ApplicationStop:
+    - location: systemctl stop tomcat.service 
+      timeout: 180
       runas: root
-      content: |
-        [Unit]
-        Description=Tomcat 9 servlet container
-        After=network.target
-
-        [Service]
-        Type=forking
-        User=tomcatuser
-        Group=tomcatgroup
-        Environment=CATALINA_HOME=/opt/tomcat
-        Environment=CATALINA_BASE=/opt/tomcat
-        ExecStart=/opt/tomcat/bin/startup.sh
-        ExecStop=/opt/tomcat/bin/shutdown.sh
-        SuccessExitStatus=143
-        TimeoutStartSec=300
-
-        [Install]
-        WantedBy=multi-user.target
+  ApplicationStart:
+    - location: systemctl start tomcat.service
+      timeout: 180
+      runas: root
