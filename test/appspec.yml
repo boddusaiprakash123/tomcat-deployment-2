@@ -5,6 +5,24 @@ files:
     destination: /opt/tomcat/webapps/myapp
 hooks:
   AfterInstall:
-    - location: /opt/tomcat/bin/startup.sh
+    - location: /etc/systemd/system/tomcat.service
       timeout: 300
       runas: root
+      content: |
+        [Unit]
+        Description=Tomcat 9 servlet container
+        After=network.target
+
+        [Service]
+        Type=forking
+        User=tomcatuser
+        Group=tomcatgroup
+        Environment=CATALINA_HOME=/opt/tomcat
+        Environment=CATALINA_BASE=/opt/tomcat
+        ExecStart=/opt/tomcat/bin/startup.sh
+        ExecStop=/opt/tomcat/bin/shutdown.sh
+        SuccessExitStatus=143
+        TimeoutStartSec=300
+
+        [Install]
+        WantedBy=multi-user.target
